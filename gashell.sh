@@ -4,9 +4,6 @@
 
 #This Program/Script Is Lisenced Under GNU V3 (https://www.gnu.org/licenses/gpl-3.0.en.html) and comes with ABSOLUTELY NO WARRANTY. You may distribute, modify and run it however you must not claim it as your own nor sublisence it.
 
-#CHANGE THIS IF NOT CORRECT ON YOUR SYSTEM
-BINPREFIX="/bin";
-
 #Path Vars
 REQBINS=("sed" "oathtool" "openssl" "zbarimg" "curl");
 CONFIGDIR="/home/$USER/.config/gashell";
@@ -63,6 +60,7 @@ NewSALT() {
 	#Set Salt file Security
 	chmod 600 $SALTFILE;
 }
+#//NewSALT()_END
 
 NewPass() {
 
@@ -85,6 +83,7 @@ NewPass() {
 
 	done
 }
+#//NewPass()_END
 
 AskForPassword() {
 	#Ask For Password
@@ -174,8 +173,8 @@ ShowCodes() {
 
 #Check all required binaries are present
 for bin in "${REQBINS[@]}"; do
-	if [ ! -f "$BINPREFIX/$bin" ]; then
-		echo "Missing required executable $bin! Please ensure the application is installed and that the BINPREFIX variable is correct.";
+	if ! hash $bin 2>/dev/null; then
+		echo "Missing required executable $bin! Please ensure the application is installed.";
 		exit 1;
 	fi
 done

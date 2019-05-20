@@ -7,7 +7,7 @@ This Program/Script Is Lisenced Under GNU V3 (https://www.gnu.org/licenses/gpl-3
 
 Any distribution must include this readme file.
 
-Please note this was a script that was done in my spare time and while it has had substational testing, I recommend you have additonal backups for your google auth private keys. I welcome any suggestions for improving this script, especially suggestions to improve security. I have only tested this on Linux but may work under other *nix or Linux-based systems by changing the "BINPREFIX" variable accordingly.
+Please note this was a script that was done in my spare time and while it has had substational testing, I recommend you have additonal backups for your google auth private keys. I welcome any suggestions for improving this script, especially suggestions to improve security. I have only tested this on Linux but may work under other *nix or Linux-based systems.
 
 GAShell acts as Google Authenticator code generator and manager allowing you to generate, add and remove your Google Authenticator codes inside your bash shell/terminal. GAShell stores your codes on your filesystem encrypted by a private passphrase (that you set yourself) with aes-256 under ~/.config/gashell. It also has the ability to read in google auth QR codes either via URL or through a local image.
 
