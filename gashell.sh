@@ -163,10 +163,30 @@ EncCodes() {
 #//EncCodes()_END
 
 ShowCodes() {
+    # Deep Copy the strings - might be redundant
+    SORTED_NAMES=("${AUTHCODES_NAMES[@]}")
+    SORTED_CODES=("${AUTHCODES[@]}")
+
+    for ((i=0; i <= ($CODESLENGTH - 2); ++i))
+    do
+        for ((j=((i + 1)); j <= ($CODESLENGTH - 1); ++j))
+        do
+            if [[ ${SORTED_NAMES[i]} > ${SORTED_NAMES[j]} ]]
+            then
+                tmp=${SORTED_CODES[i]}
+                SORTED_CODES[i]=${SORTED_CODES[j]}
+                SORTED_CODES[j]=$tmp
+                tmp=${SORTED_NAMES[i]}
+                SORTED_NAMES[i]=${SORTED_NAMES[j]}
+                SORTED_NAMES[j]=$tmp
+            fi
+        done
+    done
+
 	#Loop Through Each Code
 	for (( i=0; i<$CODESLENGTH; i++ )); do
-		AUTHCODE=$(oathtool -c 30 --base32 --totp ${AUTHCODES[i]});
-		echo "$(($i+1)). ${AUTHCODES_NAMES[i]} : $AUTHCODE";
+		AUTHCODE=$(oathtool -c 30 --base32 --totp ${SORTED_CODES[i]});
+		echo "$(($i+1)). ${SORTED_NAMES[i]} : $AUTHCODE";
 	done
 }
 #//ShowCodes()_END
