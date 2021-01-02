@@ -135,12 +135,32 @@ DecCodes() {
 
 #Function to encrypt codes
 EncCodes() {
+	# Deep Copy the strings - might be redundant
+	SORTED_NAMES=("${AUTHCODES_NAMES[@]}")
+	SORTED_CODES=("${AUTHCODES[@]}")
+
+	for ((i=0; i <= ($CODESLENGTH - 2); ++i))
+	do
+		for ((j=((i + 1)); j <= ($CODESLENGTH - 1); ++j))
+		do
+			if [[ ${SORTED_NAMES[i]} > ${SORTED_NAMES[j]} ]]
+			then
+				tmp=${SORTED_CODES[i]}
+				SORTED_CODES[i]=${SORTED_CODES[j]}
+				SORTED_CODES[j]=$tmp
+				tmp=${SORTED_NAMES[i]}
+				SORTED_NAMES[i]=${SORTED_NAMES[j]}
+				SORTED_NAMES[j]=$tmp
+			fi
+		done
+	done
+
 
 	CODESLENGTH=0;
 	CODESSTR="";
 
 	#If AutCodes length is not the same as names something went wrong
-	if [ ${#AUTHCODES[@]} -ne ${#AUTHCODES_NAMES[@]} ]; then
+	if [ ${#SORTED_CODES[@]} -ne ${#SORTED_NAMES[@]} ]; then
 		echo -e "ERROR! Auth codes list not match and will not be saved! Exiting!";
 		exit 1;
 	fi
@@ -149,12 +169,12 @@ EncCodes() {
 	NewSALT;
 
 	#Create string to save codes as
-	CODESLENGTH=${#AUTHCODES[@]};
+	CODESLENGTH=${#SORTED_CODES[@]};
 	for (( i=0; i<$CODESLENGTH; i++ )); do
 		if [ $i -gt 0 ]; then
 			CODESSTR="$CODESSTR\n";
 		fi
-		CODESSTR="$CODESSTR${AUTHCODES[i]}\t${AUTHCODES_NAMES[i]}";
+		CODESSTR="$CODESSTR${SORTED_CODES[i]}\t${SORTED_NAMES[i]}";
 	done
 
 	#Encrypt String (no salt as added manually)
@@ -163,30 +183,10 @@ EncCodes() {
 #//EncCodes()_END
 
 ShowCodes() {
-    # Deep Copy the strings - might be redundant
-    SORTED_NAMES=("${AUTHCODES_NAMES[@]}")
-    SORTED_CODES=("${AUTHCODES[@]}")
-
-    for ((i=0; i <= ($CODESLENGTH - 2); ++i))
-    do
-        for ((j=((i + 1)); j <= ($CODESLENGTH - 1); ++j))
-        do
-            if [[ ${SORTED_NAMES[i]} > ${SORTED_NAMES[j]} ]]
-            then
-                tmp=${SORTED_CODES[i]}
-                SORTED_CODES[i]=${SORTED_CODES[j]}
-                SORTED_CODES[j]=$tmp
-                tmp=${SORTED_NAMES[i]}
-                SORTED_NAMES[i]=${SORTED_NAMES[j]}
-                SORTED_NAMES[j]=$tmp
-            fi
-        done
-    done
-
 	#Loop Through Each Code
 	for (( i=0; i<$CODESLENGTH; i++ )); do
-		AUTHCODE=$(oathtool -c 30 --base32 --totp ${SORTED_CODES[i]});
-		echo "$(($i+1)). ${SORTED_NAMES[i]} : $AUTHCODE";
+		AUTHCODE=$(oathtool -c 30 --base32 --totp ${AUTHCODES[i]});
+		echo "$(($i+1)). ${AUTHCODES_NAMES[i]} : $AUTHCODE";
 	done
 }
 #//ShowCodes()_END
