@@ -135,24 +135,34 @@ DecCodes() {
 
 #Function to encrypt codes
 EncCodes() {
-	# Deep Copy the strings - might be redundant
-	SORTED_NAMES=("${AUTHCODES_NAMES[@]}")
-	SORTED_CODES=("${AUTHCODES[@]}")
+	newIndex=0;
+	SORTED_NAMES=("${AUTHCODES_NAMES[@]}");
+	SORTED_CODES=("${AUTHCODES[@]}");
+	ARRSIZE=${#AUTHCODES[@]};
+	VALA='';
+	VALB='';
 
-	#Sort Codes Alphanumericlly
-	for ((i=0; i <= ($CODESLENGTH - 2); ++i))
-	do
-		for ((j=((i + 1)); j <= ($CODESLENGTH - 1); ++j))
-		do
-			if [[ ${SORTED_NAMES[i]} > ${SORTED_NAMES[j]} ]]
-			then
-				tmp=${SORTED_CODES[i]}
-				SORTED_CODES[i]=${SORTED_CODES[j]}
-				SORTED_CODES[j]=$tmp
-				tmp=${SORTED_NAMES[i]}
-				SORTED_NAMES[i]=${SORTED_NAMES[j]}
-				SORTED_NAMES[j]=$tmp
+	#Sort Codes Alphanumericlly (i and j bubble sort)
+	for ((i=0; i < ($ARRSIZE - 1); i++)); do
+		for ((j=0; j < ($ARRSIZE - i - 1); j++)); do
+
+			newIndex=$((j+1));
+			VALA="${SORTED_NAMES[j]}";
+			VALB="${SORTED_NAMES[newIndex]}";
+
+			if [[ $VALA > $VALB ]]; then
+
+				#Do Name
+				SORTED_NAMES[j]="$VALB";
+				SORTED_NAMES[newIndex]="$VALA";
+
+				#Do Code
+				VALA="${SORTED_CODES[j]}";
+				VALB="${SORTED_CODES[newIndex]}";
+				SORTED_CODES[j]="$VALB";
+				SORTED_CODES[newIndex]="$VALA";
 			fi
+
 		done
 	done
 
