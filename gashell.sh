@@ -139,6 +139,7 @@ EncCodes() {
 	SORTED_NAMES=("${AUTHCODES_NAMES[@]}")
 	SORTED_CODES=("${AUTHCODES[@]}")
 
+	#Sort Codes Alphanumericlly
 	for ((i=0; i <= ($CODESLENGTH - 2); ++i))
 	do
 		for ((j=((i + 1)); j <= ($CODESLENGTH - 1); ++j))
@@ -377,11 +378,14 @@ else
 		exit 0;
 	fi
 
+	#Clear the screen terminal first before loop begin
+	clear;
+
 	#Keep looping codes
 	while [ $EXIT -eq 0 ]; do
 
-		#Clear Terminal
-		clear;
+		#Move cusor back to start pos
+		tput cup 0 0;
 
 		#Show codes and details
 		ShowCodes;
