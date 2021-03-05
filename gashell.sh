@@ -6,7 +6,7 @@
 
 #Path Vars
 REQBINS=("sed" "oathtool" "openssl" "zbarimg" "curl");
-CONFIGDIR="/home/$USER/.config/gashell";
+CONFIGDIR="$HOME/.config/gashell";
 SALTFILE="$CONFIGDIR/salt";
 SALTLENGTH=1024;
 CODESFILE="$CONFIGDIR/secrets"
