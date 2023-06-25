@@ -1,8 +1,6 @@
 # GAShell
 A bash script that generates and securely manages Google Authenticator codes
 
-Techtonic Software 2019 - http://www.techtonicsoftware.com/
-
 This Program/Script Is Lisenced Under GNU V3 (https://www.gnu.org/licenses/gpl-3.0.en.html) and comes with ABSOLUTELY NO WARRANTY. You may distribute, modify and run it however you must not claim it as your own nor sublisence it.
 
 Any distribution must include this readme file.
