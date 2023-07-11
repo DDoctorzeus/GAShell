@@ -10,7 +10,6 @@ CONFIGDIR="$HOME/.config/gashell";
 SALTFILE="$CONFIGDIR/salt";
 SALTLENGTH=1024;
 CODESFILE="$CONFIGDIR/secrets"
-QRWEBOUTPUT="/tmp/gashellqr.file";
 
 #Help Vars
 HELPTEXT="
@@ -313,6 +312,8 @@ if [ $# -gt 0 ]; then
 
 		QRLOC="$2";
 
+		QRWEBOUTPUT="$(mktemp)"
+
 		#If file exists, remove it
 		if [ -f $QRWEBOUTPUT ]; then
 			rm $QRWEBOUTPUT;
@@ -325,10 +326,7 @@ if [ $# -gt 0 ]; then
 		fi
 
 		#Make sure we have a valid location
-		if [ "$QRLOC" == "" ]; then
-			echo "Could not get code from QRCode! If a web address was specified check $QRWEBOUTPUT for log details.";
-			exit 1;
-		elif [ ! -f $QRLOC ]; then
+		if [ ! -f "$QRLOC" ]; then
 			echo "Could not find file at $QRLOC";
 			exit 1;
 		fi
