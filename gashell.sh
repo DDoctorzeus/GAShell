@@ -11,7 +11,6 @@ SALTFILE="$CONFIGDIR/salt";
 SALTLENGTH=1024;
 CODESFILE="$CONFIGDIR/secrets"
 QRWEBOUTPUT="/tmp/gashellqr.file";
-ERROROUTFILE="/tmp/gashellerr.txt";
 
 #Help Vars
 HELPTEXT="
@@ -108,10 +107,14 @@ DecCodes() {
 	CODESSTR=$(cat $CODESFILE);
 
 	#Attempt decrypt using provided password (no salt as added manually)
-	CODESSTR=$(echo $CODESSTR | openssl enc -d -pbkdf2 -aes-256-cbc -a -nosalt -pass "pass:$SALT$PASSWORD$SALT" 2>$ERROROUTFILE);
+
+	OPENSSLERRORFILE="$(mktemp)"
+	CODESSTR=$(echo $CODESSTR | openssl enc -d -pbkdf2 -aes-256-cbc -a -nosalt -pass "pass:$SALT$PASSWORD$SALT" 2>"$OPENSSLERRORFILE");
+	OPENSSLERROR=$( [ -s "$OPENSSLERRORFILE" ] && echo 1 )
+	rm -f "$OPENSSLERRORFILE"
 
 	#Check that we got something that is parsible
-	if [ -s $ERROROUTFILE ]; then
+	if [ "$OPENSSLERROR" = 1 ]; then
 		#If we output an error during decrypt
 		echo "ERROR! Failed to decrypt file (maybe wrong password?).";
 		exit 1;
