@@ -332,8 +332,8 @@ if [ $# -gt 0 ]; then
 		fi
 
 		#Get secret and name from zbar
-		AUTHCODE=$(zbarimg -q --raw $QRLOC | sed "s/.*secret=//" | sed "s/&issuer=.*//");
-		AUTHCODE_NAME=$(zbarimg -q --raw $QRLOC | sed "s/.*&issuer=//");
+		AUTHCODE=$(zbarimg -q --raw $QRLOC | sed 's/.*secret=\([^&]*\).*/\1/');
+		AUTHCODE_NAME=$(zbarimg -q --raw $QRLOC | sed 's/otpauth:\/\/totp\/\([^?]*\)?.*/\1/; s/%20/_/g');
 
 		#If file exists, remove it
 		if [ -f $QRWEBOUTPUT ]; then
