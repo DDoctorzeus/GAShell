@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#Techtonic Software 2019 - http://www.techtonicsoftware.com/
-
 #This Program/Script Is Licensed Under GNU V3 (https://www.gnu.org/licenses/gpl-3.0.en.html) and comes with ABSOLUTELY NO WARRANTY. You may distribute, modify and run it however you must not claim it as your own nor sublicense it.
 
 #Path Vars
@@ -220,10 +218,7 @@ fi
 
 #Create directory if doesn't exist
 if [ ! -d $CONFIGDIR ]; then
-	mkdir $CONFIGDIR;
-
-	#Set Directory Security
-	chmod 700 $CONFIGDIR;
+	mkdir -m 700 $CONFIGDIR;
 fi
 
 #Read in salt if file exists
