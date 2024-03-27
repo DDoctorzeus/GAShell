@@ -45,13 +45,10 @@ QRLOC="";
 #New Salt function
 NewSALT() {
 	#New Salt
-	SALT=$(openssl rand -base64 $SALTLENGTH);
+	SALT="$(openssl rand -base64 $SALTLENGTH | tr -d '\n')";
 
 	#Output to file
 	echo $SALT > $SALTFILE;
-
-	#Remove spaces from string for use
-	SALT="$(echo $SALT | tr -d '\n')";
 
 	#Set Salt file Security
 	chmod 600 $SALTFILE;
@@ -224,7 +221,7 @@ fi
 #Read in salt if file exists
 if [ -f $SALTFILE ]; then
 	#Read in salt
-	SALT="$(cat $SALTFILE | tr -d '\n')";
+	SALT="$(cat $SALTFILE)";
 fi
 
 #Determine if a new code file or existing and ask for password accordingly
