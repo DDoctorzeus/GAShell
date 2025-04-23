@@ -19,6 +19,8 @@ HELPTEXT="
 	-r:\tRemove a key.
 	-o:\tOutput codes once only.
 	-p:\tSet a new password.
+	-e:\tExport keys to an encrypted file.
+	-m:\tImport keys from an encrypted file.
 	-h:\tShow this help screen.
 
 	You can remove the need to enter the password on output operations by specifying it in the following variable: GASHELL_PASSPHRASE. Please note that this script will automatically take the password from this variable if defined.
@@ -202,6 +204,25 @@ ShowCodes() {
 }
 #//ShowCodes()_END
 
+#Function to export codes to an encrypted file
+ExportCodes() {
+	EncCodes;
+	echo $CODESSTR > "$1";
+	chmod 600 "$1";
+	echo "Codes exported to $1 successfully.";
+}
+#//ExportCodes()_END
+
+#Function to import codes from an encrypted file
+ImportCodes() {
+	CODESFILE="$1";
+	AskForPassword;
+	DecCodes;
+	CODESLENGTH=${#AUTHCODES[@]};
+	echo "Codes imported from $1 successfully.";
+}
+#//ImportCodes()_END
+
 #Check all required binaries are present
 for bin in "${REQBINS[@]}"; do
 	if ! hash $bin 2>/dev/null; then
@@ -375,6 +396,20 @@ if [ $# -gt 0 ]; then
 	elif [ "$1" == "-o" ]; then
 		#Output once only
 		ShowCodes;
+	elif [ "$1" == "-e" ]; then
+		#Export codes to an encrypted file
+		if [ -z "$2" ]; then
+			echo "Please specify a file to export to.";
+			exit 1;
+		fi
+		ExportCodes "$2";
+	elif [ "$1" == "-m" ]; then
+		#Import codes from an encrypted file
+		if [ -z "$2" ]; then
+			echo "Please specify a file to import from.";
+			exit 1;
+		fi
+		ImportCodes "$2";
 	fi
 else
 	

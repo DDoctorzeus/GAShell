@@ -19,6 +19,8 @@ You will require the following applications/binaries to use this script: sed, oa
     -r: Remove a key.
     -o: Output codes once only.
     -p: Set a new password.
+    -e: Export keys to an encrypted file.
+    -m: Import keys from an encrypted file.
     -h: Show this help screen.
 
     You can remove the need to enter the password on output operations by specifying it in the following variable: GASHELL_PASSPHRASE. Please note that this script will automatically take the password from this variable if defined.
