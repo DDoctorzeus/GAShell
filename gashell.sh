@@ -106,7 +106,7 @@ DecCodes() {
 	#Attempt decrypt using provided password (no salt as added manually)
 
 	OPENSSLERRORFILE="$(mktemp)"
-	CODESSTR=$(echo $CODESSTR | openssl enc -d -pbkdf2 -aes-256-cbc -a -nosalt -pass "pass:$SALT$PASSWORD$SALT" 2>"$OPENSSLERRORFILE");
+	CODESSTR=$(echo $CODESSTR | PASSENV="$SALT$PASSWORD$SALT" openssl enc -d -pbkdf2 -aes-256-cbc -a -nosalt -pass "env:PASSENV" 2>"$OPENSSLERRORFILE");
 	OPENSSLERROR=$( [ -s "$OPENSSLERRORFILE" ] && echo 1 )
 	rm -f "$OPENSSLERRORFILE"
 
@@ -189,7 +189,7 @@ EncCodes() {
 	done
 
 	#Encrypt String (no salt as added manually)
-	CODESSTR=$(echo $CODESSTR | openssl enc -e -pbkdf2 -aes-256-cbc -a -nosalt -pass "pass:$SALT$PASSWORD$SALT" 2>/dev/null);
+	CODESSTR=$(echo $CODESSTR | PASSENV="$SALT$PASSWORD$SALT" openssl enc -e -pbkdf2 -aes-256-cbc -a -nosalt -pass "env:PASSENV" 2>/dev/null);
 }
 #//EncCodes()_END
 
