@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes gnupg oathtool shellcheck
+
+      - name: Check Bash syntax
+        run: bash -n gashell.sh tests/test_gashell.sh tests/mocks/*
+
+      - name: Run ShellCheck
+        run: shellcheck gashell.sh tests/test_gashell.sh tests/mocks/*
+
+      - name: Run regression tests
+        run: ./tests/test_gashell.sh
+
+      - name: Check whitespace
+        run: git diff-tree --check --no-commit-id --root -r HEAD

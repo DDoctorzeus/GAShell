@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ "${GASHELL_TEST_ZBAR_FAIL:-0}" == "1" ]]; then
+	exit 1
+fi
+
+printf '%s\n' "${GASHELL_TEST_QR_DATA:-}"

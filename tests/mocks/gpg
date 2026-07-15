@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [[ "${GASHELL_TEST_FAIL_ENCRYPT:-0}" == "1" ]]; then
+	for argument in "$@"; do
+		if [[ "$argument" == "--symmetric" ]]; then
+			exit 42
+		fi
+	done
+fi
+
+exec "${GASHELL_REAL_GPG:?GASHELL_REAL_GPG is required by the test suite}" "$@"
