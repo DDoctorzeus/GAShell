@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+[[ "${!#}" == "-" ]] || exit 2
+IFS= read -r secret
+
+if [[ -n "${GASHELL_TEST_OATH_LOG:-}" ]]; then
+	printf '%s\n' "$*" >> "$GASHELL_TEST_OATH_LOG"
+fi
+
+case "$secret" in
+	JBSWY3DPEHPK3PXP) printf '111111\n' ;;
+	KRUGS4ZANFZSAYJA) printf '222222\n' ;;
+	ONXW4ZDFOQ======) printf '33333333\n' ;;
+	*) exit 1 ;;
+esac
