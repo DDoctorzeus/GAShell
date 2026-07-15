@@ -56,19 +56,28 @@ run_gashell() {
 create_legacy_vault() {
 	local config=$1
 	local password=$2
-	local salt='legacy-test-salt'
+	local raw_salt
+	local salt
+	local encrypted_payload
 
 	mkdir -p "$config"
+
+	#Reproduce the original 1,024-byte salt and its unquoted echo formatting
+	raw_salt=$(openssl rand -base64 1024)
+	salt=${raw_salt//$'\n'/ }
 	printf '%s\n' "$salt" > "$config/salt"
-	printf '%s\n' 'JBSWY3DPEHPK3PXP\tLegacy Account' | openssl enc \
+
+	#Reproduce the original environment passphrase source and Base64 formatting
+	encrypted_payload=$(printf '%s\n' 'JBSWY3DPEHPK3PXP\tLegacy Account' | \
+		PASSENV="$salt$password$salt" openssl enc \
 		-e \
 		-pbkdf2 \
 		-aes-256-cbc \
 		-a \
 		-nosalt \
-		-pass fd:3 \
-		-out "$config/secrets" \
-		3< <(printf '%s\n' "$salt$password$salt")
+		-pass env:PASSENV)
+	encrypted_payload=${encrypted_payload//$'\n'/ }
+	printf '%s\n' "$encrypted_payload" > "$config/secrets"
 }
 
 test_help_without_runtime_dependencies() {

@@ -382,16 +382,16 @@ LoadLegacyVault() {
 	salt=$(tr -d '\n' < "$LEGACY_SALTFILE") || Die "Could not read the legacy salt"
 	[[ -n "$salt" ]] || Die "Legacy vault salt is blank"
 
-	#Decrypt through a file descriptor so the password is not in process arguments
-	if ! escaped_payload=$(openssl enc \
+	#Use the original environment source because OpenSSL truncates this legacy
+	#passphrase when its 1,024-byte salt is supplied through a file descriptor
+	if ! escaped_payload=$(PASSENV="$salt$PASSWORD$salt" openssl enc \
 		-d \
 		-pbkdf2 \
 		-aes-256-cbc \
 		-a \
 		-nosalt \
-		-pass fd:3 \
-		-in "$CODESFILE" \
-		3< <(printf '%s\n' "$salt$PASSWORD$salt") 2>/dev/null); then
+		-pass env:PASSENV \
+		-in "$CODESFILE" 2>/dev/null); then
 		Die "Could not decrypt the legacy vault; the password may be wrong or the file may be damaged"
 	fi
 
