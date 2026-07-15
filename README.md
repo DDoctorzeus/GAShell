@@ -20,6 +20,25 @@ Keep an independent backup of your TOTP recovery keys. Losing both the vault
 password and the original recovery keys cannot be reversed. Anyone who can
 read your unlocked terminal can also read the generated one-time codes.
 
+## Backup and restore
+
+Create a compressed backup of your GAShell configuration:
+
+```sh
+tar -czf gashell_bak.tar.gz -C ~/.config gashell
+```
+
+Copy `gashell_bak.tar.gz` to your backup location as needed.
+
+To restore the backup on a new PC (or another installation), create the configuration directory if necessary and extract the archive into it:
+
+```sh
+mkdir -p ~/.config
+tar -xzf gashell_bak.tar.gz -C ~/.config
+```
+
+You will require the following applications/binaries to use this script: sed, oathtool, openssl, zbar, curl. As well as a basic set of *nix system commands.
+
 ## Requirements
 
 - Bash 4.3 or newer
